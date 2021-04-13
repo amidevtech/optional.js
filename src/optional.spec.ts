@@ -4,6 +4,7 @@ import { AppliedSupplierIsNullOrUndefinedError } from './errors/applied-supplier
 import { AppliedConsumerIsNullOrUndefinedError } from './errors/applied-consmer-is-null-or-undefined.error';
 import { AppliedApplyIsNullOrUndefinedError } from './errors/applied-apply-is-null-or-undefined.error';
 import { AppliedFunctionIsNullOrUndefinedError } from './errors/applied-function-is-null-or-undefined.error';
+import { AppliedPredicateIsNullOrUndefinedError } from './errors/applied-predicate-is-null-or-undefined.error';
 
 describe('Optional', () => {
     const text = 'test text';
@@ -11,7 +12,7 @@ describe('Optional', () => {
         expect(Optional.empty()).toBeInstanceOf(Optional);
     });
 
-    describe('Optional.get()', () => {
+    describe('Optional.get', () => {
         it('should return value when "get()" is called and value exists', () => {
             expect(Optional.of(text).get()).toBe(text);
         });
@@ -23,7 +24,7 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.of(value: T)', () => {
+    describe('Optional.of', () => {
         it('should create Optional "of()" when value exists', () => {
             expect(Optional.of(text).get()).toBe(text);
         });
@@ -41,7 +42,7 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.ofNullable(value: T)', () => {
+    describe('Optional.ofNullable', () => {
         it('should create Optional "ofNullable()" when value exists', () => {
             expect(Optional.ofNullable(text).get()).toBe(text);
         });
@@ -65,7 +66,7 @@ describe('Optional', () => {
             }).toThrowError(NoSuchElementError);
         });
     });
-    describe('Optional.orElse()', () => {
+    describe('Optional.orElse', () => {
         it('should return value when "orElse()" is called and value exists', () => {
             expect(Optional.of(text).orElse('another')).toBe(text);
         });
@@ -74,7 +75,7 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.orElseGet(supplier: () => T)', () => {
+    describe('Optional.orElseGet', () => {
         const supplierString: string = 'supplier';
         const supplier: () => string = () => supplierString;
         it('should return value when "orElseGet()" is called and value exists', () => {
@@ -96,7 +97,7 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.orElseThrow()', () => {
+    describe('Optional.orElseThrow', () => {
         it('should return value when "orElseThrow()" is called and value exists', () => {
             expect(Optional.of(text).orElseThrow()).toBe(text);
         });
@@ -107,7 +108,7 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.isEmpty()', () => {
+    describe('Optional.isEmpty', () => {
         it('should return true when "isEmpty()" is called and value do not exists', () => {
             expect(Optional.empty().isEmpty()).toBeTruthy();
         });
@@ -116,7 +117,7 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.isPresent()', () => {
+    describe('Optional.isPresent', () => {
         it('should return false when "isPresent()" is called and value do not exists', () => {
             expect(Optional.empty().isPresent()).toBeFalsy();
         });
@@ -125,7 +126,7 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.equals(optional: Optional)', () => {
+    describe('Optional.equals', () => {
         it('should return true when "equals()" is called with itself when value exists', () => {
             const optional: Optional<string> = Optional.of(text);
             expect(optional.equals(optional)).toBeTruthy();
@@ -155,7 +156,7 @@ describe('Optional', () => {
             expect(optionalOne.equals(optionalTwo)).toBeFalsy();
         });
     });
-    describe('Optional.ifPresent(consumer: (x: T) => void)', () => {
+    describe('Optional.ifPresent', () => {
         it('should apply consumer on "ifPresent()" if value exists', () => {
             let testNumber: number = 0;
             const optional: Optional<string> = Optional.of(text);
@@ -283,6 +284,37 @@ describe('Optional', () => {
                 const optional: Optional<string> = Optional.empty();
                 const optionalOr: Optional<string> = optional.or(undefined);
             }).toThrowError(AppliedSupplierIsNullOrUndefinedError);
+        });
+    });
+
+    describe('Optional.filter(predicate (x: T) => boolean)', () => {
+        it('should return value in "filter()" if value exists and predicate is true', () => {
+            const optional: Optional<string> = Optional.of(text);
+            const optionalOr: Optional<string> = optional.filter((x: string) => x === text);
+            expect(optionalOr.isPresent()).toBeTruthy();
+            expect(optionalOr.get()).toBe(text);
+        });
+        it('should return empty in "filter()" if value exists and predicate is false', () => {
+            const optional: Optional<string> = Optional.of(text);
+            const optionalOr: Optional<string> = optional.filter((x: string) => x === text + text);
+            expect(optionalOr.isPresent()).toBeFalsy();
+        });
+        it('should return empty in "filter()" if value do not exists', () => {
+            const optional: Optional<string> = Optional.empty();
+            const optionalOr: Optional<string> = optional.filter((x: string) => x === text + text);
+            expect(optionalOr.isPresent()).toBeFalsy();
+        });
+        it('should throw error when "filter()" is called with null predicate', () => {
+            expect(() => {
+                const optional: Optional<string> = Optional.empty();
+                const optionalPredicate: Optional<string> = optional.filter(null);
+            }).toThrowError(AppliedPredicateIsNullOrUndefinedError);
+        });
+        it('should throw error when "filter()" is called with undefined predicate', () => {
+            expect(() => {
+                const optional: Optional<string> = Optional.empty();
+                const optionalPredicate: Optional<string> = optional.filter(undefined);
+            }).toThrowError(AppliedPredicateIsNullOrUndefinedError);
         });
     });
 });
