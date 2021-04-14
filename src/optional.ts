@@ -67,7 +67,7 @@ export class Optional<T> {
      * in other way error is thrown.
      * @param supplier Supplier to check.
      * @private
-     * @returns {@code supplier}, if it's not {@code null} or {@code undefined}.
+     * @returns {@link Supplier}, if it's not {@code null} or {@code undefined}.
      * @throws AppliedSupplierIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
      */
     private static requireNonEmptySupplier<T>(supplier: Supplier<T>): Supplier<T> {
@@ -82,7 +82,7 @@ export class Optional<T> {
      * in other way error is thrown.
      * @param consumer Consumer to check.
      * @private
-     * @returns {@code consumer}, if it's not {@code null} or {@code undefined}.
+     * @returns {@link Consumer}, if it's not {@code null} or {@code undefined}.
      * @throws AppliedConsumerIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
      */
     private static requireNonEmptyConsumer<T>(consumer: (x: T) => void): (x: T) => void {
@@ -97,7 +97,7 @@ export class Optional<T> {
      * in other way error is thrown.
      * @param apply Apply to check.
      * @private
-     * @returns {@code apply}, if it's not {@code null} or {@code undefined}.
+     * @returns {@link Apply}, if it's not {@code null} or {@code undefined}.
      * @throws AppliedApplyIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
      */
     private static requireNonEmptyApply<T>(apply: Apply): Apply {
@@ -112,7 +112,7 @@ export class Optional<T> {
      * in other way error is thrown.
      * @param predicate Predicate to check.
      * @private
-     * @returns {@code predicate}, if it's not {@code null} or {@code undefined}.
+     * @returns {@Link Predicate}, if it's not {@code null} or {@code undefined}.
      * @throws AppliedPredicateIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
      */
     private static requireNonEmptyPredicate<T>(predicate: Predicate<T>): Predicate<T> {
@@ -127,7 +127,7 @@ export class Optional<T> {
      * in other way error is thrown.
      * @param fun Function to check.
      * @private
-     * @returns {@code fun}, if it's not {@code null} or {@code undefined}.
+     * @returns {@link MonoFunction}, if it's not {@code null} or {@code undefined}.
      * @throws AppliedFunctionIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
      */
     private static requireNonEmptyFunction<T, U>(fun: MonoFunction<T, U>): MonoFunction<T, U> {
@@ -137,31 +137,71 @@ export class Optional<T> {
         return fun;
     }
 
+    /**
+     * Returns empty optional.
+     * Represents empty value, when {@code value} is {@code null} or {@code undefined}.
+     * @returns Optional with empty value.
+     */
     public static empty<T>(): Optional<T> {
         return Optional.EMPTY;
     }
 
+    /**
+     * Creates optional from not empty value. When {@code value} is not {@code null} or {@code undefined}.
+     * @param value Passed not empty value.
+     * @returns Optional with value not empty value.
+     * @throws NoSuchElementError if value {@code value} is {@code null} or {@code undefined}.
+     */
     public static of<T>(value: T): Optional<T> {
         return new Optional<T>(Optional.requireNonEmptyValue(value));
     }
 
+    /**
+     * Creates optional from passed value, no mather what is it.
+     * In this case {@code value} could be {@code null} or {@code undefined}.
+     * @param value Passed value, could be empty.
+     * @returns Optional with passed value. If {@code value} is {@code null} or {@code undefined} teh {@link Optional.empty}
+     * is returned.
+     */
     public static ofNullable<T>(value: T): Optional<T> {
         return Optional.isNotEmpty(value) ? Optional.of(value) : Optional.empty();
     }
 
+    /**
+     * Returns value of {@link Optional}.
+     * @returns Value, if present.
+     * @throws NoSuchElementError Error occurred when, {@link Optional.get} is
+     * called on {@link Optional#empty}.
+     */
     public get(): T {
         return Optional.requireNonEmptyValue(this.value);
     }
 
+    /**
+     * Returns {@code value} of {@link Optional}, or if {@code value} is not present {@code other}
+     * @param other Value to be returned if {@code value} is {@code null} or {@code undefined}.
+     * @returns {@code value} of optional or if empty {@code other}
+     * @throws AppliedSupplierIsNullOrUndefinedError Error occurred when, {@code supplier} is {@code null} or {@code undefined}
+     */
     public orElse(other: T): T {
         return Optional.isNotEmpty(this.value) ? this.value : other;
     }
 
+    /**
+     * Returns {@code value} of {@link Optional}, or apply {@link Supplier} if empty.
+     * @param supplier Supplier to be returned if {@code value} is {@code null} or {@code undefined}.
+     * @returns {@code value} of optional or if empty {@code supplier} is applied.
+     */
     public orElseGet(supplier: Supplier<T>): T {
-        const supplierChecked: () => T = Optional.requireNonEmptySupplier(supplier);
+        const supplierChecked: Supplier<T> = Optional.requireNonEmptySupplier(supplier);
         return Optional.isNotEmpty(this.value) ? this.value : supplierChecked();
     }
 
+    /**
+     * Returns {@code value} of {@link Optional}, or throw {@link NoSuchElementError} if empty.
+     * @returns {@code value} of optional or if empty {@link NoSuchElementError} is throw.
+     * @throws NoSuchElementError Error occurred when, {@code code} is {@code null} or {@code undefined}
+     */
     public orElseThrow(): T {
         if (this.isEmpty()) {
             throw new NoSuchElementError();
@@ -169,14 +209,27 @@ export class Optional<T> {
         return this.value;
     }
 
+    /**
+     * Check if {@code value} is empty.
+     * @returns True, if {@code value} is {@code null} or {@code undefined}.
+     */
     public isEmpty(): boolean {
         return Optional.isEmpty(this.value);
     }
 
+    /**
+     * Check if {@code value} is present.
+     * @returns True, if {@code value} is not {@code null} or {@code undefined}.
+     */
     public isPresent(): boolean {
         return !Optional.isEmpty(this.value);
     }
 
+    /**
+     * Compares with passed {@code optional}.
+     * @param optional Optional to compare.
+     * @returns True, if both values are present and value is the same, or both are empty.
+     */
     public equals(optional: Optional<T>): boolean {
         let equals = false;
         if (this.isEmpty() && optional.isEmpty()) {
@@ -188,6 +241,11 @@ export class Optional<T> {
         return equals;
     }
 
+    /**
+     * Apply consumer function {@link Consumer} on {@code value} if present.
+     * @throws AppliedConsumerIsNullOrUndefinedError Error occurred when,
+     * {@code consumer} is {@code null} or {@code undefined}.
+     */
     public ifPresent(consumer: Consumer<T>): void {
         const consumerChecked: (x: T) => void = Optional.requireNonEmptyConsumer(consumer);
         if (this.isPresent()) {
@@ -195,6 +253,14 @@ export class Optional<T> {
         }
     }
 
+    /**
+     * Apply consumer function {@link Consumer} on {@code value} if present,
+     * when empty apply {@link Apply}
+     * @throws AppliedConsumerIsNullOrUndefinedError Error occurred when,
+     * {@code consumerPresent} is {@code null} or {@code undefined}.
+     * @throws AppliedApplyIsNullOrUndefinedError Error occurred when,
+     * {@code applyEmpty} is {@code null} or {@code undefined}.
+     */
     public ifPresentOrElse(consumerPresent: Consumer<T>, applyEmpty: Apply): void {
         const consumerPresentChecked: (x: T) => void = Optional.requireNonEmptyConsumer(consumerPresent);
         const consumerEmptyChecked: () => void = Optional.requireNonEmptyApply(applyEmpty);
