@@ -1,5 +1,6 @@
 # optional.js
-Makes code `undefined`/`null` safe! Wrapper for `undefined` and `null` values in JavaScript which fixes problems with handling this values.
+Makes TypeScript/JavaScript code `undefined`/`null` safe! 
+Optional.js is a wrapper for `undefined` and `null` values in TypeScript/JavaScript which fixes problems with handling this values.
 
 
 # Reasons to use optional.js
