@@ -271,11 +271,27 @@ export class Optional<T> {
         }
     }
 
+    /**
+     * Map {@link Optional<T>} into {@link Optional<U>} with {@link MonoFunction} {@code T -> U} if value exists,
+     * else return empty as it was.
+     * @param fun Mono function which transform {@code T -> U}
+     * @returns Optional of new type which was transformed using {@link MonoFunction}
+     * @throws AppliedFunctionIsNullOrUndefinedError Error occurred when,
+     * {@code fun} is {@code null} or {@code undefined}.
+     */
     public map<U>(fun: MonoFunction<T, U>): Optional<U> {
         const funChecked: (x: T) => U = Optional.requireNonEmptyFunction(fun);
         return this.isEmpty() ? Optional.empty() : Optional.of(funChecked(this.value));
     }
 
+    /**
+     * Function return {@link Optional} if {@code value} is not {@code null} or {@code undefined},
+     * in other case it apply given {@code supplier} and returns {@link Optional} with it's value.
+     * @param supplier Supplier to apply.
+     * @returns Optional with value if exists, if not - {@link Optional} from {@code supplier}
+     * @throws AppliedSupplierIsNullOrUndefinedError Error occurred when,
+     * {@code supplier} is {@code null} or {@code undefined}.
+     */
     public or(supplier: Supplier<T>): Optional<T> {
         const supplierChecked: () => T = Optional.requireNonEmptySupplier(supplier);
         if (this.isPresent()) {
@@ -285,6 +301,14 @@ export class Optional<T> {
         }
     }
 
+    /**
+     * Function return {@link Optional} with {@code value} if {@link predicate} on {@code value} is {@code True}
+     * in other case it returns {@link Optional.empty}
+     * @param predicate Predicate to check against {@code value}.
+     * @returns Optional with value if {@code predicate} is {@code True}, if not - {@link Optional.empty}
+     * @throws AppliedPredicateIsNullOrUndefinedError Error occurred when,
+     * {@code predicate} is {@code null} or {@code undefined}.
+     */
     public filter(predicate: Predicate<T>): Optional<T> {
         const predicateChecked: (x: T) => boolean = Optional.requireNonEmptyPredicate(predicate);
         if (this.isEmpty()) {
