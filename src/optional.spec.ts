@@ -97,14 +97,14 @@ describe('Optional', () => {
         });
     });
 
-    describe('Optional.orElseThrow', () => {
+    describe('Optional.orElseThrowError', () => {
         it('should return value when "orElseThrow()" is called and value exists', () => {
-            expect(Optional.of(text).orElseThrow()).toBe(text);
+            expect(Optional.of(text).orElseThrowError(() => new Error())).toBe(text);
         });
         it('should throw error when "orElseGet()" is called and supplier is null', () => {
             expect(() => {
-                Optional.empty().orElseThrow();
-            }).toThrowError(NoSuchElementError);
+                Optional.empty().orElseThrowError(() => new Error());
+            }).toThrowError(Error);
         });
     });
 

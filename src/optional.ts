@@ -199,12 +199,12 @@ export class Optional<T> {
 
     /**
      * Returns {@code value} of {@link Optional}, or throw {@link NoSuchElementError} if empty.
-     * @returns {@code value} of optional or if empty {@link NoSuchElementError} is throw.
-     * @throws NoSuchElementError Error occurred when, {@code code} is {@code null} or {@code undefined}
+     * @returns {@code value} of optional or if empty {@link Error} is throw.
+     * @throws Custom Error occurred when, {@code code} is {@code null} or {@code undefined}
      */
-    public orElseThrow(): T {
+    public orElseThrowError(exceptionSupplier: Supplier<Error>): T {
         if (this.isEmpty()) {
-            throw new NoSuchElementError();
+            throw exceptionSupplier();
         }
         return this.value;
     }
