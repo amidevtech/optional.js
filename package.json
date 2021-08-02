@@ -1,6 +1,6 @@
 {
-  "name": "optional.js",
-  "version": "1.0.0",
+  "name": "@amidevtech/optional.js",
+  "version": "1.0.1",
   "description": "Provide Optional functionality for null/undefined safety!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,8 @@
     "test:cov": "jest --coverage",
     "format": "prettier --write \"src/**/*.ts\""
   },
-  "author": "amidev <amidevtech@gmail.com>",
+  "author": "amidevtech <optional.js@amidev.tech>",
+  "repository": "https://github.com/amidevtech/optional.js",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^26.0.22",

@@ -33,7 +33,7 @@ Download from npm or from [GitHub](https://github.com/amidevtech/optional.js)
 
 Download using npm 
 ```bash
-npm install optional.js
+npm install @amidevtech/optional.js
 ```
 
 # Usage
