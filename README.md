@@ -137,3 +137,30 @@ let len: number = 0;
 Optional.of('value').ifPresent((v: string) => len = v.length) // Assign 5 to len
 Optional.empty().ifPresent((v: string) => len = v.length) // Do not assign anything, len will be 0
 ```
+```javascript
+// Optional.ifPresentOrElse
+let len: number = 0;
+Optional.of('value').ifPresentOrElse((v: string) => len = v.length, () => len = 10) // Assign 5 to len
+Optional.empty().ifPresentOrElse((v: string) => len = v.length, () => len = 10) // Assign 10 to len
+```
+
+
+## Manipulators 
+```javascript
+// Optional.map
+Optional.of('value').map((v: string) => len = v.length) // Will retrun Optional with value 5
+Optional.empty().map((v: string) => len = v.length) // Will return empty as it was
+```
+
+```javascript
+// Optional.or
+Optional.of('value').or(() => 5) // Will retrun Optional with value 5
+Optional.empty().or(() => 5) // Will retrun Optional with value 5
+```
+
+```javascript
+// Optional.filter
+Optional.of(5).filter((x: number) => x === 5) // Will retrun Optional with value 5, as is not empty and meets condition
+Optional.of(10).filter((x: number) => x === 5) // Will retrun Optional.empty(), as is not empty but do not meets condition
+Optional.empty().filter((x: number) => x === 5) // Will return empty, as it is empty.
+```
