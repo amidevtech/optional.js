@@ -31,11 +31,6 @@ getUser(4).ifPresent(user => console.log(user.name))
 # Installation
 Download from npm or from [GitHub](https://github.com/amidevtech/optional.js)
 
-Download using npm 
-```bash
-npm install @amidevtech/optional.js
-```
-
 # Usage
 The perfect example for showing necessity of using `Optional` is when method returns object which data based on provided argument,
 and there is possibility that method will not return us proper builded object.
