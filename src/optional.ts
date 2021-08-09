@@ -12,7 +12,7 @@ import { Consumer } from './functions/consumer';
 
 /**
  * Optional for providing {@code null} and {@code undefined} safety.
- * @author amidev
+ * @author amidevtech
  */
 export class Optional<T> {
     /** Field responsible for empty value. It's returned each time if optional has not value. */

@@ -52,7 +52,22 @@ export class OptionalArray<T> {
      * @returns {@link Consumer}, if it's not {@code null} or {@code undefined}.
      * @throws AppliedConsumerIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
      */
-    private static requireNonEmptyConsumer<T>(consumer: (x: T[]) => void): (x: T[]) => void {
+    private static requireNonEmptyConsumerArray<T>(consumer: (x: T[]) => void): (x: T[]) => void {
+        if (consumer === null || consumer === undefined) {
+            throw new AppliedConsumerIsNullOrUndefinedError();
+        }
+        return consumer;
+    }
+
+    /**
+     * Util method to validate and return {@code consumer} if it's not {@code null} or {@code undefined},
+     * in other way error is thrown.
+     * @param consumer Consumer to check.
+     * @private
+     * @returns {@link Consumer}, if it's not {@code null} or {@code undefined}.
+     * @throws AppliedConsumerIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
+     */
+    private static requireNonEmptyConsumer<T>(consumer: (x: T) => void): (x: T) => void {
         if (consumer === null || consumer === undefined) {
             throw new AppliedConsumerIsNullOrUndefinedError();
         }
@@ -159,7 +174,7 @@ export class OptionalArray<T> {
      * {@code consumer} is {@code null} or {@code undefined}.
      */
     public ifPresent(consumer: Consumer<T[]>): void {
-        const consumerChecked: (x: T[]) => void = OptionalArray.requireNonEmptyConsumer(consumer);
+        const consumerChecked: (x: T[]) => void = OptionalArray.requireNonEmptyConsumerArray(consumer);
         if (this.isPresent()) {
             consumerChecked(this.value);
         }
@@ -171,7 +186,7 @@ export class OptionalArray<T> {
      * {@code consumer} is {@code null} or {@code undefined}.
      */
     public ifOnePresent(consumer: Consumer<T>): void {
-        const consumerChecked: (x: T) => void = Optional.requireNonEmptyConsumer(consumer);
+        const consumerChecked: (x: T) => void = OptionalArray.requireNonEmptyConsumer(consumer);
         if (this.isPresent() && this.value.length === 1) {
             this.value.forEach(consumerChecked)
         }
