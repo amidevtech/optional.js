@@ -1,10 +1,10 @@
 import { Optional } from './optional';
-import { NoSuchElementError } from './errors/no-such-element-error';
-import { AppliedSupplierIsNullOrUndefinedError } from './errors/applied-supplier-is-null-or-undefined.error';
-import { AppliedConsumerIsNullOrUndefinedError } from './errors/applied-consmer-is-null-or-undefined.error';
-import { AppliedApplyIsNullOrUndefinedError } from './errors/applied-apply-is-null-or-undefined.error';
-import { AppliedFunctionIsNullOrUndefinedError } from './errors/applied-function-is-null-or-undefined.error';
-import { AppliedPredicateIsNullOrUndefinedError } from './errors/applied-predicate-is-null-or-undefined.error';
+import { NoSuchElementError } from '../errors/no-such-element-error';
+import { AppliedSupplierIsNullOrUndefinedError } from '../errors/applied-supplier-is-null-or-undefined.error';
+import { AppliedConsumerIsNullOrUndefinedError } from '../errors/applied-consmer-is-null-or-undefined.error';
+import { AppliedApplyIsNullOrUndefinedError } from '../errors/applied-apply-is-null-or-undefined.error';
+import { AppliedFunctionIsNullOrUndefinedError } from '../errors/applied-function-is-null-or-undefined.error';
+import { AppliedPredicateIsNullOrUndefinedError } from '../errors/applied-predicate-is-null-or-undefined.error';
 
 describe('Optional', () => {
     const text = 'test text';
