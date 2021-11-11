@@ -1,18 +1,18 @@
-import { NoSuchElementError } from './errors/no-such-element-error';
-import { AppliedFunctionIsNullOrUndefinedError } from './errors/applied-function-is-null-or-undefined.error';
-import { AppliedSupplierIsNullOrUndefinedError } from './errors/applied-supplier-is-null-or-undefined.error';
-import { AppliedConsumerIsNullOrUndefinedError } from './errors/applied-consmer-is-null-or-undefined.error';
-import { AppliedApplyIsNullOrUndefinedError } from './errors/applied-apply-is-null-or-undefined.error';
-import { AppliedPredicateIsNullOrUndefinedError } from './errors/applied-predicate-is-null-or-undefined.error';
-import { Predicate } from './functions/predicate';
-import { Supplier } from './functions/supplier';
-import { Apply } from './functions/apply';
-import { MonoFunction } from './functions/function';
-import { Consumer } from './functions/consumer';
+import { NoSuchElementError } from '../errors/no-such-element-error';
+import { AppliedFunctionIsNullOrUndefinedError } from '../errors/applied-function-is-null-or-undefined.error';
+import { AppliedSupplierIsNullOrUndefinedError } from '../errors/applied-supplier-is-null-or-undefined.error';
+import { AppliedConsumerIsNullOrUndefinedError } from '../errors/applied-consmer-is-null-or-undefined.error';
+import { AppliedApplyIsNullOrUndefinedError } from '../errors/applied-apply-is-null-or-undefined.error';
+import { AppliedPredicateIsNullOrUndefinedError } from '../errors/applied-predicate-is-null-or-undefined.error';
+import { Predicate } from '../functions/predicate';
+import { Supplier } from '../functions/supplier';
+import { Apply } from '../functions/apply';
+import { MonoFunction } from '../functions/function';
+import { Consumer } from '../functions/consumer';
 
 /**
  * Optional for providing {@code null} and {@code undefined} safety.
- * @author amidev
+ * @author amidevtech
  */
 export class Optional<T> {
     /** Field responsible for empty value. It's returned each time if optional has not value. */
@@ -25,7 +25,7 @@ export class Optional<T> {
      * @param value Value which {@link Optional} is created.
      * @private
      */
-    private constructor(private readonly value: T) {}
+    protected constructor(private readonly value: T) {}
 
     /**
      * Util method used to check if {@code value} not {@code null} or {@code undefined}
