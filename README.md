@@ -23,14 +23,16 @@ getUser(4).ifPresent(user => console.log(user.name))
 
 Or this:
 ```javascript
-const user: User = getAllUsers().find(user => user.name == 'test');
+const users: User[] = getUsers();
+const user: User = users.find(user => user.name == 'test');
 if (user !== undefined) {
     console.log(user.name);
 }
 ```
 into this:
 ```javascript
-OptionalArray.ofArray(getAllUsers()).findOne(user => user.name == 'test')
+OptionalArray.ofArray(getAllUsers())
+    .findOne(user => user.name == 'test')
     .ifPresent(user => console.log(user.name))
 ```
 
@@ -47,6 +49,8 @@ Download from npm or from [GitHub](https://github.com/amidevtech/optional.js)
 
 # Usage
 Library consist of two main class/helpers
-- Optional - Designed to handle null / undefined safety for single values. [Readme with usage examples of Optional](./src/optional/Optional.md)
-- OptionalArray - Designed to handle null / undefined safety for arrays. [Readme with usage examples of OptionalArray](./src/optional-array/OptionalArray.md)
+- Optional - Designed to handle null / undefined safety for single values. 
+  - [Readme with usage examples of Optional](./src/optional/Optional.md)
+- OptionalArray - Designed to handle null / undefined safety for arrays. 
+  - [Readme with usage examples of OptionalArray](./src/optional-array/OptionalArray.md)
 
