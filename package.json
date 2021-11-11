@@ -4,7 +4,7 @@
   "description": "Provide Optional functionality for null/undefined safety!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "keywords": ["optional", "optional.js", "undefined safety", "null safety", "java"],
+  "keywords": ["optional", "optional.js", "undefined safety", "null safety", "java", "array","array safety"],
   "files": [
     "/dist"
   ],
