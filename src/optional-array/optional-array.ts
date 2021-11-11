@@ -8,10 +8,11 @@ import { Optional } from '../optional/optional';
 import { NoSuchElementError } from '../errors/no-such-element-error';
 
 /**
- * Optional array for providing functionality with potentially empty arrays.
+ * Optional array for providing functionality with potentially empty arrays and manipulate them.
  * @author amidevtech
  */
 export class OptionalArray<T> {
+
     /** Field responsible for empty value. It's returned each time if optional has not value. */
     private static readonly EMPTY: OptionalArray<undefined> = new OptionalArray<undefined>(undefined);
 
@@ -25,10 +26,10 @@ export class OptionalArray<T> {
     private constructor(private readonly value: T[]) {}
 
     /**
-     * Util method used to check if {@code value} not {@code null} or {@code undefined}
+     * Util method used to check if {@code value} not {@code null} or {@code undefined} or {@code value.length = 0}
      * @param value Value to check.
      * @private
-     * @returns True, if value is {@code null} or {@code undefined}.
+     * @returns True, if value is {@code null} or {@code undefined} or {@code value.length = 0}.
      */
     private static isEmpty<T>(value: T[]): boolean {
         return !OptionalArray.isNotEmpty(value);
@@ -46,11 +47,11 @@ export class OptionalArray<T> {
     }
 
     /**
-     * Check if {@code value} is empty - nullish.
+     * Check if {@code value} is empty - nullish which means {@code null} or {@code undefined}.
      * @returns True, if {@code value} is {@code null} or {@code undefined}.
      */
     public static isNullish<T>(value: T[]): boolean {
-        return value === null && value === undefined;
+        return value === null || value === undefined;
     }
 
     /**
@@ -138,14 +139,14 @@ export class OptionalArray<T> {
     }
 
     /**
-     * Creates optional from passed value, no mather what is it.
-     * In this case {@code value} could be {@code null} or {@code undefined}.
+     * Creates optional from passed value, no matter what is it.
+     * In this case {@code value} could be {@code null} or {@code undefined} or {@code value.length = 0}.
      * @param value Passed value, could be empty.
-     * @returns OptionalArray with passed value. If {@code value} is {@code null} or {@code undefined} teh {@link OptionalArray.empty}
-     * is returned.
+     * @returns OptionalArray with passed value. If {@code value} is {@code null} or {@code undefined} 
+     * or {@code value.length = 0} then {@link OptionalArray.empty} is returned.
      */
-    public static ofNullableArray<T>(value: T[]): OptionalArray<T> {
-        return OptionalArray.isNotEmpty(value) ? OptionalArray.ofArray(value) : OptionalArray.empty();
+    public static ofArray<T>(value: T[]): OptionalArray<T> {
+        return OptionalArray.isNotEmpty(value) ? OptionalArray.ofNotNullishArray(value) : OptionalArray.empty();
     }
 
     /**
@@ -154,13 +155,13 @@ export class OptionalArray<T> {
      * @returns Optional with value not empty value.
      * @throws NoSuchElementError if value {@code value} is {@code null} or {@code undefined}.
      */
-    public static ofArray<T>(value: T[]): OptionalArray<T> {
+    public static ofNotNullishArray<T>(value: T[]): OptionalArray<T> {
         return new OptionalArray<T>(OptionalArray.requireNonNullishValueArray(value));
     }
 
     /**
      * Check if {@code value} is empty.
-     * @returns True, if {@code value} is {@code null} or {@code undefined}
+     * @returns True, if {@code value} is {@code null} or {@code undefined} or {@code value.length = 0}
      * or Array is empty.
      */
     public isEmpty(): boolean {
@@ -168,31 +169,11 @@ export class OptionalArray<T> {
     }
 
     /**
-     * Check if {@code value} is nullish.
-     * @returns True, if {@code value} is {@code null} or {@code undefined}.
-     */
-    public isNullish(): boolean {
-        return OptionalArray.isNullish(this.value);
-    }
-
-    /**
      * Check if {@code value} is present.
-     * @returns True, if {@code value} is not {@code null} or {@code undefined}.
+     * @returns True, if {@code value} is not {@code null} or {@code undefined} or {@code value.length > 0}.
      */
     public isPresent(): boolean {
         return !OptionalArray.isEmpty(this.value);
-    }
-
-    /**
-     // * Check if {@code value} is present.
-     // * @returns True, if {@code value} is not {@code null} or {@code undefined}.
-     */
-    public isOneElementPresent(): boolean {
-        return !OptionalArray.isEmpty(this.value) && this.value.length == 1;
-    }
-
-    public isElementsPresent(): boolean {
-        return !OptionalArray.isEmpty(this.value) && this.value.length > 0;
     }
 
     /**
@@ -230,8 +211,9 @@ export class OptionalArray<T> {
     public get(): T[] {
         return OptionalArray.requireNonNullishValueArray(this.value);
     }
+
     /**
-     * Apply consumer function {@link Consumer} on {@code value} if present.
+     * Apply consumer function {@link Consumer} on non empty {@code value} if present.
      * @throws AppliedConsumerIsNullOrUndefinedError Error occurred when,
      * {@code consumer} is {@code null} or {@code undefined}.
      */
@@ -243,7 +225,7 @@ export class OptionalArray<T> {
     }
 
     /**
-     * Apply consumer function {@link Consumer} on {@code value} if present.
+     * Apply consumer function {@link Consumer} on {@code value} if exact one element is present.
      * @throws AppliedConsumerIsNullOrUndefinedError Error occurred when,
      * {@code consumer} is {@code null} or {@code undefined}.
      */
@@ -251,18 +233,6 @@ export class OptionalArray<T> {
         const consumerChecked: (x: T) => void = OptionalArray.requireNonEmptyConsumer(consumer);
         if (this.isPresent() && this.value.length === 1) {
             this.value.forEach(consumerChecked)
-        }
-    }
-
-    /**
-     * Apply consumer function {@link Consumer} on {@code value} if present.
-     * @throws AppliedConsumerIsNullOrUndefinedError Error occurred when,
-     * {@code consumer} is {@code null} or {@code undefined}.
-     */
-    public ifElementsPresent(consumer: Consumer<T[]>): void {
-        const consumerChecked: (x: T[]) => void = OptionalArray.requireNonEmptyConsumer(consumer);
-        if (this.isPresent() && this.value.length === 1) {
-            consumerChecked(this.value);
         }
     }
 
@@ -299,9 +269,27 @@ export class OptionalArray<T> {
      * Returns Optional with the value of the first element in the array where
      * predicate is true, and  {@link OptionalArray.empty} otherwise.
      * @param predicate Predicate to check against {@code value}.
+     * @returns Value if {@code predicate} is true.
      */
     public findOne(predicate: Predicate<T>): Optional<T> {
         const predicateChecked: (x: T) => boolean = OptionalArray.requireNonEmptyPredicate(predicate);
-        return Optional.ofNullable(this.value.find(predicateChecked));
+        if (this.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.ofNullable(this.value.find(predicateChecked));
+        }
+    }
+
+    /**
+     * Returns Optional with the value of the first element in the array,
+     * {@link OptionalArray.empty} otherwise.
+     * @returns First element in array if exits.
+     */
+    public getFirst(): Optional<T> {
+        if (this.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.ofNullable(this.value[0]);
+        }
     }
 }
