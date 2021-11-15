@@ -47,6 +47,9 @@ OptionalArray.ofArray(getAllUsers())
 # Installation
 Download from npm or from [GitHub](https://github.com/amidevtech/optional.js)
 
+# Changelog
+Can be found at [Changelog](https://github.com/amidevtech/optional.js/CHANGELOG.md)
+
 # Usage
 Library consist of two main class/helpers
 - Optional - Designed to handle null / undefined safety for single values. 
