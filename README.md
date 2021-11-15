@@ -48,7 +48,7 @@ OptionalArray.ofArray(getAllUsers())
 Download from npm or from [GitHub](https://github.com/amidevtech/optional.js)
 
 # Changelog
-Can be found at [Changelog](https://github.com/amidevtech/optional.js/CHANGELOG.md)
+[Changelog](https://github.com/amidevtech/optional.js/blob/main/CHANGELOG.md)
 
 # Usage
 Library consist of two main class/helpers
