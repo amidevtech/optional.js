@@ -66,6 +66,32 @@ describe('Optional', () => {
             }).toThrowError(NoSuchElementError);
         });
     });
+
+    describe('Optional.ofNullish', () => {
+        it('should create Optional "ofNullish()" when value exists', () => {
+            expect(Optional.ofNullish(text).get()).toBe(text);
+        });
+
+        it('should create empty() when "ofNullish()" is called with undefined', () => {
+            expect(Optional.ofNullish(undefined).isEmpty()).toBeTruthy();
+        });
+
+        it('should create empty() when "ofNullish()" is called with null', () => {
+            expect(Optional.ofNullish(null).isEmpty()).toBeTruthy();
+        });
+
+        it('should throw error when get() is called on "ofNullish()" with null', () => {
+            expect(() => {
+                Optional.ofNullish(null).get();
+            }).toThrowError(NoSuchElementError);
+        });
+        it('should throw error when get() is called on "ofNullish()" with undefined', () => {
+            expect(() => {
+                Optional.ofNullish(null).get();
+            }).toThrowError(NoSuchElementError);
+        });
+    });
+
     describe('Optional.orElse', () => {
         it('should return value when "orElse()" is called and value exists', () => {
             expect(Optional.of(text).orElse('another')).toBe(text);

@@ -2,6 +2,9 @@
 
 All major changes will be listed in this file.
 
+## [1.1.2] -  23.01.2022
+- Adding 'ofNullish' method which makes it easier to read null/undefined
+
 ## [1.1.1] -  15.11.2021
 - Creating CHANGELOG
 

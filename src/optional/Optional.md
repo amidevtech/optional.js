@@ -46,6 +46,15 @@ Optional.ofNullable(undefined); // Create empty optional
 Optional.ofNullable(null); // Create empty optional
 ```
 
+### Optional.ofNullish
+
+```javascript
+// Optional.ofNullish - Create from value which can be null/undefined
+Optional.ofNullish('value'); // Create optional with value 'value'
+Optional.ofNullish(undefined); // Create empty optional
+Optional.ofNullish(null); // Create empty optional
+```
+
 ### Optional.of
 ```javascript
 // Optional.of - Create from value which can't be null/undefined

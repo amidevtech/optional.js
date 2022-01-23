@@ -11,7 +11,7 @@ import { MonoFunction } from '../functions/function';
 import { Consumer } from '../functions/consumer';
 
 /**
- * Optional for providing {@code null} and {@code undefined} safety.
+ * Optional for providing {@code null} and {@code undefined}, called together as {@code nullish}, safety.
  * @author amidevtech
  */
 export class Optional<T> {
@@ -164,6 +164,17 @@ export class Optional<T> {
      * is returned.
      */
     public static ofNullable<T>(value: T): Optional<T> {
+        return Optional.ofNullish(value);
+    }
+
+    /**
+     * Creates optional from passed value, no mather what is it.
+     * In this case {@code value} could be {@code nullish}, what means {@code null} or {@code undefined}.
+     * @param value Passed value, could be empty.
+     * @returns Optional with passed value. If {@code value} is {@code null} or {@code undefined} teh {@link Optional.empty}
+     * is returned.
+     */
+    public static ofNullish<T>(value: T): Optional<T> {
         return Optional.isNotEmpty(value) ? Optional.of(value) : Optional.empty();
     }
 
