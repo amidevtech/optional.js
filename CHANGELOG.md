@@ -2,6 +2,9 @@
 
 All major changes will be listed in this file.
 
+## [1.1.3] -  27.01.2022
+- Transition from module: "commonjs", to module: "esnext"
+
 ## [1.1.2] -  23.01.2022
 - Adding 'ofNullish' method which makes it easier to read null/undefined
 
