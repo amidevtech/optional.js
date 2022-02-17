@@ -2,6 +2,12 @@
 
 All major changes will be listed in this file.
 
+## [1.1.4] -  17.02.2022
+- Revert previous version as esnext makes problems.
+
+## [1.1.3] -  27.01.2022
+- Change from commonjs to esnext.
+
 ## [1.1.2] -  23.01.2022
 - Adding 'ofNullish' method which makes it easier to read null/undefined
 
