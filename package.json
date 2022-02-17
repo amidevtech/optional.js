@@ -1,18 +1,10 @@
 {
   "name": "@amidevtech/optional.js",
-  "version": "1.1.3",
+  "version": "1.1.2",
   "description": "Provide Optional functionality for null/undefined safety!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "keywords": [
-    "optional",
-    "optional.js",
-    "undefined safety",
-    "null safety",
-    "java",
-    "array",
-    "array safety"
-  ],
+  "keywords": ["optional", "optional.js", "undefined safety", "null safety", "java", "array","array safety"],
   "files": [
     "/dist"
   ],
