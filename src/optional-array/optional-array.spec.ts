@@ -77,6 +77,35 @@ describe('OptionalArray', () => {
             expect(OptionalArray.ofArray(empty).equals(OptionalArray.empty())).toBeTruthy();
         });
     });
+    describe('OptionalArray.ofArrayAsync', () => {
+        it('should create OptionalArray "ofArrayAsync()" when value exists', done => {
+            OptionalArray.ofArrayAsync(Promise.resolve(filled)).then(optionalArray => {
+               expect(optionalArray.get()).toBe(filled);
+               done();
+            });
+        });
+
+        it('should create OptionalArray "ofArrayAsync()" when value is null', done => {
+            OptionalArray.ofArrayAsync(Promise.resolve(nNull)).then(optionalArray => {
+                expect(optionalArray.isEmpty()).toBeTruthy()
+                done();
+            });
+        });
+
+        it('should create OptionalArray "ofArrayAsync()" when value is undefined', done => {
+            OptionalArray.ofArrayAsync(Promise.resolve(nUndefined)).then(optionalArray => {
+                expect(optionalArray.isEmpty()).toBeTruthy()
+                done();
+            });
+        });
+
+        it('should create OptionalArray "ofArrayAsync()" when array is epmty', done => {
+            OptionalArray.ofArrayAsync(Promise.resolve(empty)).then(optionalArray => {
+                expect(optionalArray.isEmpty()).toBeTruthy()
+                done();
+            });
+        });
+    });
     describe('OptionalArray.ofNotNullishArray', () => {
         it('should create OptionalArray "ofNotNullishArray()" when value exists', () => {
             expect(OptionalArray.ofArray(filled).get()).toBe(filled);

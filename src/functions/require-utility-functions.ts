@@ -102,4 +102,34 @@ export class RequireUtilityFunctions {
         }
         return fun;
     }
+
+    /**
+     * Util method to validate and return {@code value} if it's not {@code null} or {@code undefined},
+     * in other way error is thrown.
+     * @param value Value to check.
+     * @private
+     * @returns {@code value}, if it's not {@code null} or {@code undefined}.
+     * @throws NoSuchElementError if value is not present.
+     */
+    public static requireNonNullishValueArray<T>(value: T[]): T[] {
+        if (value === null || value === undefined) {
+            throw new NoSuchElementError();
+        }
+        return value;
+    }
+
+    /**
+     * Util method to validate and return {@code consumer} if it's not {@code null} or {@code undefined},
+     * in other way error is thrown.
+     * @param consumer Consumer to check.
+     * @private
+     * @returns {@link Consumer}, if it's not {@code null} or {@code undefined}.
+     * @throws AppliedConsumerIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
+     */
+    public static requireNonEmptyConsumerArray<T>(consumer: (x: T[]) => void): (x: T[]) => void {
+        if (consumer === null || consumer === undefined) {
+            throw new AppliedConsumerIsNullOrUndefinedError();
+        }
+        return consumer;
+    }
 }
