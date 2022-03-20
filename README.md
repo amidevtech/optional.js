@@ -36,6 +36,13 @@ OptionalArray.ofArray(getAllUsers())
     .ifPresent(user => console.log(user.name))
 ```
 
+# Usage
+Library consist of two main class/helpers
+- Optional - Designed to handle null / undefined safety for single values.
+  - [Readme with usage examples of Optional](./src/optional/Optional.md)
+- OptionalArray - Designed to handle null / undefined safety for arrays.
+  - [Readme with usage examples of OptionalArray](./src/optional-array/OptionalArray.md)
+   
 # Features 
 - Contains known from [Java Optional](https://docs.oracle.com/javase/9/docs/api/java/util/Optional.html) (Without `stream()`) and more.
 - Contains useful methods which reduce boilerplate code for array operations.
@@ -50,10 +57,4 @@ Download from npm or from [GitHub](https://github.com/amidevtech/optional.js)
 # Changelog
 [Changelog](https://github.com/amidevtech/optional.js/blob/main/CHANGELOG.md)
 
-# Usage
-Library consist of two main class/helpers
-- Optional - Designed to handle null / undefined safety for single values. 
-  - [Readme with usage examples of Optional](./src/optional/Optional.md)
-- OptionalArray - Designed to handle null / undefined safety for arrays. 
-  - [Readme with usage examples of OptionalArray](./src/optional-array/OptionalArray.md)
 

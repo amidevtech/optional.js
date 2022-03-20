@@ -2,6 +2,9 @@
 
 All major changes will be listed in this file.
 
+## [1.1.6] -  20.03.2022
+- Readme file reorganization
+ 
 ## [1.1.5] -  20.03.2022
 - Adding `Optional.ofAsync` and `OptionalArray.ofArrayAsync`
 - Code reorganization. Required checks moved to separate file
