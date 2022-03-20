@@ -45,6 +45,7 @@ OptionalArray.ofArray(['value']); // Create optional with value ['value']
 OptionalArray.ofArray(undefined); // Create empty optional array
 OptionalArray.ofArray(null); // Create empty optional array
 OptionalArray.ofArray([]); // Create empty optional array
+OptionalArray.ofArrayAsync(Promise.resolve([] | undefined | null | ['val'])); // Returns Promise<OptionalArray<T>>
 ```
 
 ### OptionalArray.ofNotNullishArray

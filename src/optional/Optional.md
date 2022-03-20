@@ -65,6 +65,11 @@ Optional.of(undefined); // Throws an Error
 NOTE - as `Optional.ofNullable(undefined)` and `Optional.ofNullable(null)`
 creates Optional.empty() in further examples only one example will be used
 
+### Optional.ofAsync
+```javascript
+Optional.ofAsync(Promise.resolve('text')) // Returns Promise<Optional<string>>
+```
+
 ## Check if value exists
 
 ### Optional.isEmpty

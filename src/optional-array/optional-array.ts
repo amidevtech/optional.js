@@ -1,11 +1,10 @@
-import { AppliedFunctionIsNullOrUndefinedError } from '../errors/applied-function-is-null-or-undefined.error';
-import { AppliedConsumerIsNullOrUndefinedError } from '../errors/applied-consmer-is-null-or-undefined.error';
-import { AppliedPredicateIsNullOrUndefinedError } from '../errors/applied-predicate-is-null-or-undefined.error';
 import { Predicate } from '../functions/predicate';
 import { MonoFunction } from '../functions/function';
 import { Consumer } from '../functions/consumer';
 import { Optional } from '../optional/optional';
-import { NoSuchElementError } from '../errors/no-such-element-error';
+import {
+    RequireUtilityFunctions
+} from '../functions/require-utility-functions';
 
 /**
  * Optional array for providing functionality with potentially empty arrays and manipulate them.
@@ -47,89 +46,6 @@ export class OptionalArray<T> {
     }
 
     /**
-     * Check if {@code value} is empty - nullish which means {@code null} or {@code undefined}.
-     * @returns True, if {@code value} is {@code null} or {@code undefined}.
-     */
-    public static isNullish<T>(value: T[]): boolean {
-        return value === null || value === undefined;
-    }
-
-    /**
-     * Util method to validate and return {@code value} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param value Value to check.
-     * @private
-     * @returns {@code value}, if it's not {@code null} or {@code undefined}.
-     * @throws NoSuchElementError if value is not present.
-     */
-    private static requireNonNullishValueArray<T>(value: T[]): T[] {
-        if (OptionalArray.isNullish(value)) {
-            throw new NoSuchElementError();
-        }
-        return value;
-    }
-
-    /**
-     * Util method to validate and return {@code consumer} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param consumer Consumer to check.
-     * @private
-     * @returns {@link Consumer}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedConsumerIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyConsumerArray<T>(consumer: (x: T[]) => void): (x: T[]) => void {
-        if (consumer === null || consumer === undefined) {
-            throw new AppliedConsumerIsNullOrUndefinedError();
-        }
-        return consumer;
-    }
-
-    /**
-     * Util method to validate and return {@code consumer} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param consumer Consumer to check.
-     * @private
-     * @returns {@link Consumer}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedConsumerIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyConsumer<T>(consumer: (x: T) => void): (x: T) => void {
-        if (consumer === null || consumer === undefined) {
-            throw new AppliedConsumerIsNullOrUndefinedError();
-        }
-        return consumer;
-    }
-
-    /**
-     * Util method to validate and return {@code predicate} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param predicate Predicate to check.
-     * @private
-     * @returns {@Link Predicate}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedPredicateIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyPredicate<T>(predicate: Predicate<T>): Predicate<T> {
-        if (predicate === null || predicate === undefined) {
-            throw new AppliedPredicateIsNullOrUndefinedError();
-        }
-        return predicate;
-    }
-
-    /**
-     * Util method to validate and return {@code function} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param fun Function to check.
-     * @private
-     * @returns {@link MonoFunction}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedFunctionIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyFunction<T, U>(fun: MonoFunction<T, U>): MonoFunction<T, U> {
-        if (fun === null || fun === undefined) {
-            throw new AppliedFunctionIsNullOrUndefinedError();
-        }
-        return fun;
-    }
-
-    /**
      * Returns empty optional.
      * Represents empty value, when {@code value} is {@code null} or {@code undefined} or array is empty.
      * @returns OptionalArray with empty value.
@@ -150,13 +66,24 @@ export class OptionalArray<T> {
     }
 
     /**
+     * Creates optional from passed Promise with value, no matter what is it.
+     * In this case {@code value} could be {@code null} or {@code undefined} or {@code value.length = 0}.
+     * @param promiseValue Promise with passed value, could be empty.
+     * @returns Promise with OptionalArray with passed value. If {@code value} is {@code null} or {@code undefined}
+     * or {@code value.length = 0} then {@link OptionalArray.empty} is returned.
+     */
+    public static async ofArrayAsync<T>(promiseValue: Promise<T[]>): Promise<OptionalArray<T>> {
+        return OptionalArray.isNotEmpty(await promiseValue) ? OptionalArray.ofNotNullishArray(await promiseValue) : OptionalArray.empty();
+    }
+
+    /**
      * Creates optional from not empty value. When {@code value} is not {@code null} or {@code undefined}.
      * @param value Passed not empty value.
      * @returns Optional with value not empty value.
      * @throws NoSuchElementError if value {@code value} is {@code null} or {@code undefined}.
      */
     public static ofNotNullishArray<T>(value: T[]): OptionalArray<T> {
-        return new OptionalArray<T>(OptionalArray.requireNonNullishValueArray(value));
+        return new OptionalArray<T>(RequireUtilityFunctions.requireNonNullishValueArray(value));
     }
 
     /**
@@ -209,7 +136,7 @@ export class OptionalArray<T> {
      * @returns Value, if present in otherwise empty array.
      */
     public get(): T[] {
-        return OptionalArray.requireNonNullishValueArray(this.value);
+        return RequireUtilityFunctions.requireNonNullishValueArray(this.value);
     }
 
     /**
@@ -218,7 +145,7 @@ export class OptionalArray<T> {
      * {@code consumer} is {@code null} or {@code undefined}.
      */
     public ifPresent(consumer: Consumer<T[]>): void {
-        const consumerChecked: (x: T[]) => void = OptionalArray.requireNonEmptyConsumerArray(consumer);
+        const consumerChecked: (x: T[]) => void = RequireUtilityFunctions.requireNonEmptyConsumerArray(consumer);
         if (this.isPresent()) {
             consumerChecked(this.value);
         }
@@ -230,7 +157,7 @@ export class OptionalArray<T> {
      * {@code consumer} is {@code null} or {@code undefined}.
      */
     public ifOnePresent(consumer: Consumer<T>): void {
-        const consumerChecked: (x: T) => void = OptionalArray.requireNonEmptyConsumer(consumer);
+        const consumerChecked: (x: T) => void = RequireUtilityFunctions.requireNonEmptyConsumer(consumer);
         if (this.isPresent() && this.value.length === 1) {
             this.value.forEach(consumerChecked)
         }
@@ -245,7 +172,7 @@ export class OptionalArray<T> {
      * {@code fun} is {@code null} or {@code undefined}.
      */
     public map<U>(fun: MonoFunction<T, U>): OptionalArray<U> {
-        const funChecked: (x: T) => U = OptionalArray.requireNonEmptyFunction(fun);
+        const funChecked: (x: T) => U = RequireUtilityFunctions.requireNonEmptyFunction(fun);
         return this.isEmpty() ? OptionalArray.empty() : OptionalArray.ofArray(this.value.map(funChecked));
     }
 
@@ -258,7 +185,7 @@ export class OptionalArray<T> {
      * {@code predicate} is {@code null} or {@code undefined}.
      */
     public filter(predicate: Predicate<T>): OptionalArray<T> {
-        const predicateChecked: (x: T) => boolean = OptionalArray.requireNonEmptyPredicate(predicate);
+        const predicateChecked: (x: T) => boolean = RequireUtilityFunctions.requireNonEmptyPredicate(predicate);
         if (this.isEmpty()) {
             return OptionalArray.empty();
         }
@@ -272,7 +199,7 @@ export class OptionalArray<T> {
      * @returns Value if {@code predicate} is true.
      */
     public findOne(predicate: Predicate<T>): Optional<T> {
-        const predicateChecked: (x: T) => boolean = OptionalArray.requireNonEmptyPredicate(predicate);
+        const predicateChecked: (x: T) => boolean = RequireUtilityFunctions.requireNonEmptyPredicate(predicate);
         if (this.isEmpty()) {
             return Optional.empty();
         } else {
