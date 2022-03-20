@@ -2,6 +2,10 @@
 
 All major changes will be listed in this file.
 
+## [1.1.5] -  20.03.2022
+- Adding `Optional.ofAsync` and `OptionalArray.ofArrayAsync`
+- Code reorganization. Required checks moved to separate file
+ 
 ## [1.1.4] -  17.02.2022
 - Revert previous version as esnext makes problems.
 
