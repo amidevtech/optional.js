@@ -1,14 +1,9 @@
-import { NoSuchElementError } from '../errors/no-such-element-error';
-import { AppliedFunctionIsNullOrUndefinedError } from '../errors/applied-function-is-null-or-undefined.error';
-import { AppliedSupplierIsNullOrUndefinedError } from '../errors/applied-supplier-is-null-or-undefined.error';
-import { AppliedConsumerIsNullOrUndefinedError } from '../errors/applied-consmer-is-null-or-undefined.error';
-import { AppliedApplyIsNullOrUndefinedError } from '../errors/applied-apply-is-null-or-undefined.error';
-import { AppliedPredicateIsNullOrUndefinedError } from '../errors/applied-predicate-is-null-or-undefined.error';
 import { Predicate } from '../functions/predicate';
 import { Supplier } from '../functions/supplier';
 import { Apply } from '../functions/apply';
 import { MonoFunction } from '../functions/function';
 import { Consumer } from '../functions/consumer';
+import { RequireUtilityFunctions } from '../functions/require-utility-functions';
 
 /**
  * Optional for providing {@code null} and {@code undefined}, called together as {@code nullish}, safety.
@@ -48,96 +43,6 @@ export class Optional<T> {
     }
 
     /**
-     * Util method to validate and return {@code value} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param value Value to check.
-     * @private
-     * @returns {@code value}, if it's not {@code null} or {@code undefined}.
-     * @throws NoSuchElementError if value is not present.
-     */
-    private static requireNonEmptyValue<T>(value: T): T {
-        if (Optional.isEmpty(value)) {
-            throw new NoSuchElementError();
-        }
-        return value;
-    }
-
-    /**
-     * Util method to validate and return {@code supplier} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param supplier Supplier to check.
-     * @private
-     * @returns {@link Supplier}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedSupplierIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptySupplier<T>(supplier: Supplier<T>): Supplier<T> {
-        if (supplier === null || supplier === undefined) {
-            throw new AppliedSupplierIsNullOrUndefinedError();
-        }
-        return supplier;
-    }
-
-    /**
-     * Util method to validate and return {@code consumer} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param consumer Consumer to check.
-     * @private
-     * @returns {@link Consumer}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedConsumerIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyConsumer<T>(consumer: (x: T) => void): (x: T) => void {
-        if (consumer === null || consumer === undefined) {
-            throw new AppliedConsumerIsNullOrUndefinedError();
-        }
-        return consumer;
-    }
-
-    /**
-     * Util method to validate and return {@code apply} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param apply Apply to check.
-     * @private
-     * @returns {@link Apply}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedApplyIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyApply<T>(apply: Apply): Apply {
-        if (apply === null || apply === undefined) {
-            throw new AppliedApplyIsNullOrUndefinedError();
-        }
-        return apply;
-    }
-
-    /**
-     * Util method to validate and return {@code predicate} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param predicate Predicate to check.
-     * @private
-     * @returns {@Link Predicate}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedPredicateIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyPredicate<T>(predicate: Predicate<T>): Predicate<T> {
-        if (predicate === null || predicate === undefined) {
-            throw new AppliedPredicateIsNullOrUndefinedError();
-        }
-        return predicate;
-    }
-
-    /**
-     * Util method to validate and return {@code function} if it's not {@code null} or {@code undefined},
-     * in other way error is thrown.
-     * @param fun Function to check.
-     * @private
-     * @returns {@link MonoFunction}, if it's not {@code null} or {@code undefined}.
-     * @throws AppliedFunctionIsNullOrUndefinedError if supplier is {@code null} or {@code undefined}.
-     */
-    private static requireNonEmptyFunction<T, U>(fun: MonoFunction<T, U>): MonoFunction<T, U> {
-        if (fun === null || fun === undefined) {
-            throw new AppliedFunctionIsNullOrUndefinedError();
-        }
-        return fun;
-    }
-
-    /**
      * Returns empty optional.
      * Represents empty value, when {@code value} is {@code null} or {@code undefined}.
      * @returns Optional with empty value.
@@ -153,7 +58,7 @@ export class Optional<T> {
      * @throws NoSuchElementError if value {@code value} is {@code null} or {@code undefined}.
      */
     public static of<T>(value: T): Optional<T> {
-        return new Optional<T>(Optional.requireNonEmptyValue(value));
+        return new Optional<T>(RequireUtilityFunctions.requireNonEmptyValue(value));
     }
 
     /**
@@ -165,6 +70,18 @@ export class Optional<T> {
      */
     public static ofNullable<T>(value: T): Optional<T> {
         return Optional.ofNullish(value);
+    }
+
+    /**
+     * Creates optional from passed promise with value, no mather what is it.
+     * In this case {@code value} could be {@code nullish}, what means {@code null} or {@code undefined}.
+     * @param promiseValue Promise with passed value, could be empty.
+     * @returns Promise with Optional with passed value. If {@code value} is {@code null} or {@code undefined} teh {@link Optional.empty}
+     * is returned.
+     * @async
+     */
+    public static async ofAsync<T>(promiseValue: Promise<T>): Promise<Optional<T>> {
+        return Optional.isNotEmpty(await promiseValue) ? Optional.of(await promiseValue) : Optional.empty();
     }
 
     /**
@@ -185,7 +102,7 @@ export class Optional<T> {
      * called on {@link Optional#empty}.
      */
     public get(): T {
-        return Optional.requireNonEmptyValue(this.value);
+        return RequireUtilityFunctions.requireNonEmptyValue(this.value);
     }
 
     /**
@@ -204,7 +121,7 @@ export class Optional<T> {
      * @returns {@code value} of optional or if empty {@code supplier} is applied.
      */
     public orElseGet(supplier: Supplier<T>): T {
-        const supplierChecked: Supplier<T> = Optional.requireNonEmptySupplier(supplier);
+        const supplierChecked: Supplier<T> = RequireUtilityFunctions.requireNonEmptySupplier(supplier);
         return Optional.isNotEmpty(this.value) ? this.value : supplierChecked();
     }
 
@@ -258,7 +175,7 @@ export class Optional<T> {
      * {@code consumer} is {@code null} or {@code undefined}.
      */
     public ifPresent(consumer: Consumer<T>): void {
-        const consumerChecked: (x: T) => void = Optional.requireNonEmptyConsumer(consumer);
+        const consumerChecked: (x: T) => void = RequireUtilityFunctions.requireNonEmptyConsumer(consumer);
         if (this.isPresent()) {
             consumerChecked(this.value);
         }
@@ -273,8 +190,8 @@ export class Optional<T> {
      * {@code applyEmpty} is {@code null} or {@code undefined}.
      */
     public ifPresentOrElse(consumerPresent: Consumer<T>, applyEmpty: Apply): void {
-        const consumerPresentChecked: (x: T) => void = Optional.requireNonEmptyConsumer(consumerPresent);
-        const consumerEmptyChecked: () => void = Optional.requireNonEmptyApply(applyEmpty);
+        const consumerPresentChecked: (x: T) => void = RequireUtilityFunctions.requireNonEmptyConsumer(consumerPresent);
+        const consumerEmptyChecked: () => void = RequireUtilityFunctions.requireNonEmptyApply(applyEmpty);
         if (this.isPresent()) {
             consumerPresentChecked(this.value);
         } else {
@@ -291,7 +208,7 @@ export class Optional<T> {
      * {@code fun} is {@code null} or {@code undefined}.
      */
     public map<U>(fun: MonoFunction<T, U>): Optional<U> {
-        const funChecked: (x: T) => U = Optional.requireNonEmptyFunction(fun);
+        const funChecked: (x: T) => U = RequireUtilityFunctions.requireNonEmptyFunction(fun);
         return this.isEmpty() ? Optional.empty() : Optional.of(funChecked(this.value));
     }
 
@@ -304,7 +221,7 @@ export class Optional<T> {
      * {@code supplier} is {@code null} or {@code undefined}.
      */
     public or(supplier: Supplier<T>): Optional<T> {
-        const supplierChecked: () => T = Optional.requireNonEmptySupplier(supplier);
+        const supplierChecked: () => T = RequireUtilityFunctions.requireNonEmptySupplier(supplier);
         if (this.isPresent()) {
             return this;
         } else {
@@ -321,7 +238,7 @@ export class Optional<T> {
      * {@code predicate} is {@code null} or {@code undefined}.
      */
     public filter(predicate: Predicate<T>): Optional<T> {
-        const predicateChecked: (x: T) => boolean = Optional.requireNonEmptyPredicate(predicate);
+        const predicateChecked: (x: T) => boolean = RequireUtilityFunctions.requireNonEmptyPredicate(predicate);
         if (this.isEmpty()) {
             return Optional.empty();
         }

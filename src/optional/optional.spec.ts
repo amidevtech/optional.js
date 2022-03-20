@@ -42,6 +42,29 @@ describe('Optional', () => {
         });
     });
 
+    describe('Optional.ofAsync', () => {
+        it('should create Optional "ofAsync()" when value exists', (done) => {
+            Optional.ofAsync(Promise.resolve(text)).then((it) => {
+                expect(it.get()).toBe(text);
+                done();
+            });
+        });
+
+        it('should create Optional "ofAsync()" when value is undefined', (done) => {
+            Optional.ofAsync(Promise.resolve(undefined)).then((it) => {
+                expect(it.isEmpty()).toBeTruthy();
+                done();
+            });
+        });
+
+        it('should create Optional "ofAsync()" when value is null', (done) => {
+            Optional.ofAsync(Promise.resolve(null)).then((it) => {
+                expect(it.isEmpty()).toBeTruthy();
+                done();
+            });
+        });
+    });
+
     describe('Optional.ofNullable', () => {
         it('should create Optional "ofNullable()" when value exists', () => {
             expect(Optional.ofNullable(text).get()).toBe(text);
