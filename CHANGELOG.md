@@ -2,6 +2,9 @@
 
 All major changes will be listed in this file.
 
+## [1.1.7] -  23.10.2022
+- ofNullable(), ofNulish(), ofAsync() accepts <T | null | undefined>
+
 ## [1.1.6] -  20.03.2022
 - Readme file reorganization
  

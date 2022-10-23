@@ -38,7 +38,7 @@ export class Optional<T> {
      * @private
      * @returns True, if value is not {@code null} or {@code undefined}.
      */
-    private static isNotEmpty<T>(value: T): boolean {
+    private static isNotEmpty<T>(value: T | null | undefined): boolean {
         return value !== null && value !== undefined;
     }
 
@@ -68,7 +68,7 @@ export class Optional<T> {
      * @returns Optional with passed value. If {@code value} is {@code null} or {@code undefined} teh {@link Optional.empty}
      * is returned.
      */
-    public static ofNullable<T>(value: T): Optional<T> {
+    public static ofNullable<T>(value: T | null | undefined): Optional<T> {
         return Optional.ofNullish(value);
     }
 
@@ -80,7 +80,7 @@ export class Optional<T> {
      * is returned.
      * @async
      */
-    public static async ofAsync<T>(promiseValue: Promise<T>): Promise<Optional<T>> {
+    public static async ofAsync<T>(promiseValue: Promise<T | null | undefined>): Promise<Optional<T>> {
         return Optional.isNotEmpty(await promiseValue) ? Optional.of(await promiseValue) : Optional.empty();
     }
 
@@ -91,8 +91,11 @@ export class Optional<T> {
      * @returns Optional with passed value. If {@code value} is {@code null} or {@code undefined} teh {@link Optional.empty}
      * is returned.
      */
-    public static ofNullish<T>(value: T): Optional<T> {
-        return Optional.isNotEmpty(value) ? Optional.of(value) : Optional.empty();
+    public static ofNullish<T>(value: T | null | undefined): Optional<T> {
+        if (value !== null && value !== undefined) {
+            Optional.isNotEmpty(value);
+        }
+        return Optional.EMPTY;
     }
 
     /**
